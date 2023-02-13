@@ -3,14 +3,19 @@ import { useSelector, useDispatch } from 'react-redux';
 import { counterState, iaAddValue } from './store/selector';
 import { addNumber, subtractNumber } from './counterSlice.js/counterSlice';
 import { addString, deleteValue } from './addValue/addValueSlice';
-import { useState } from 'react';
+import {  useState } from 'react';
+import { delayShowListItem, delayList } from './addValue/addValueSlice';
 
 function App() {
   const secondState = useSelector(iaAddValue)
   const countNumber = useSelector(counterState)
   const dispatch = useDispatch()
   const [inputValue, setInputValue] = useState('')
+  const [inputValueThunk, setInputValueThunk] = useState('')
 
+
+
+  console.log(inputValueThunk)
   return (
     <div className="App">
       <h1>ReduxToolkit Axios</h1>
@@ -20,10 +25,14 @@ function App() {
       <button onClick={ () => dispatch(subtractNumber([1,2,3,4]))} style={{padding :'5px 10px', margin : "5px"}}>-</button>
       <button onClick={ () => dispatch(addNumber())} style={{padding :'5px 10px', margin : "5px"}}>+</button>
 
+
+      <h2>--------------------------------------------------------------</h2>
+      <input value={inputValueThunk} onChange = {( e => setInputValueThunk(e.target.value))} />
+      <button onClick={() => dispatch(delayShowListItem(inputValueThunk))}>Test Thunk FC</button>
       <h2>--------------------------------------------------------------</h2>
 
       <input value={inputValue} onChange = {( e => setInputValue(e.target.value))} />
-      <button onClick={ () => dispatch(addString(inputValue))} style={{padding :'5px 10px', margin : "5px"}}>add</button>
+      <button onClick={ () => dispatch(addString(inputValue))} style={{padding :'5px 10px', margin : "5px"}}>add if count % 2</button>
     
       <ul>
         {secondState.map((item, index) => {
