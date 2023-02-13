@@ -1,21 +1,24 @@
 import './App.css';
 import { useSelector, useDispatch } from 'react-redux';
-import { counterState, iaAddValue } from './store/selector';
+import { counterState, iaAddValue, listApi,statusState } from './store/selector';
 import { addNumber, subtractNumber } from './counterSlice.js/counterSlice';
 import { addString, deleteValue } from './addValue/addValueSlice';
 import {  useState } from 'react';
-import { delayShowListItem, delayList } from './addValue/addValueSlice';
+import { delayShowListItem, handleBtnFakeApis } from './addValue/addValueSlice';  
+// import Skelecton from '@antd'
+
 
 function App() {
   const secondState = useSelector(iaAddValue)
+  const dataApis = useSelector(listApi)
   const countNumber = useSelector(counterState)
+  const status = useSelector(statusState)
   const dispatch = useDispatch()
   const [inputValue, setInputValue] = useState('')
   const [inputValueThunk, setInputValueThunk] = useState('')
 
 
-
-  console.log(inputValueThunk)
+  console.log("dataAPI : " ,dataApis )
   return (
     <div className="App">
       <h1>ReduxToolkit Axios</h1>
@@ -27,8 +30,19 @@ function App() {
 
 
       <h2>--------------------------------------------------------------</h2>
+      <button onClick={() => dispatch(handleBtnFakeApis())}>GET APIS</button>
+      {status === 'loading' ?  <li>loading</li> : dataApis.map((item, index) => {
+        if( index > 10 ) return null
+        return <li key={index} >{item.title}</li>
+      }) }
+    
+
+      <h2>--------------------------------------------------------------</h2>
+
+
       <input value={inputValueThunk} onChange = {( e => setInputValueThunk(e.target.value))} />
       <button onClick={() => dispatch(delayShowListItem(inputValueThunk))}>Test Thunk FC</button>
+      
       <h2>--------------------------------------------------------------</h2>
 
       <input value={inputValue} onChange = {( e => setInputValue(e.target.value))} />

@@ -1,9 +1,12 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import  axios  from 'axios'
+
 
 const initialState = {
   status : 'idle',
   value: "",
   listValue: [],
+  listApi : []
 };
 
 const addValue = createSlice({
@@ -28,7 +31,16 @@ const addValue = createSlice({
       .addCase(delayShowListItem.fulfilled, (state, action) => {
         console.log(action.payload)
         state.listValue.push(action.payload)
-      });
+      })
+      .addCase(handleBtnFakeApis.pending, (state,action) => {
+        state.status = 'loading'
+        // state.listApi.push()
+      })
+      .addCase(handleBtnFakeApis.fulfilled, ( state, action) => {
+        console.log(action.payload)
+        state.status = 'idle'
+        action.payload.map(item => state.listApi.push(item))
+      })
   },
 });
 
@@ -40,6 +52,15 @@ export const delayList = (data) => {
         },5000)
     }
 }
+
+export const handleBtnFakeApis = createAsyncThunk("fakeAPIs/get", async () => {
+ const rs = await axios.get('https://jsonplaceholder.typicode.com/posts',{
+    params : {
+      id : null,
+    }
+  })
+  return rs.data
+})
 
 export const delayShowListItem = createAsyncThunk("'prefix'", async (data) => {
     // const res = await fetch('https://jsonplaceholder.typicode.com/posts')
