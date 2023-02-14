@@ -3,12 +3,21 @@ import { useSelector, useDispatch } from 'react-redux';
 import { counterState, iaAddValue, listApi,statusState } from './store/selector';
 import { addNumber, subtractNumber } from './counterSlice.js/counterSlice';
 import { addString, deleteValue } from './addValue/addValueSlice';
-import {  useState } from 'react';
+import {  useEffect, useState } from 'react';
 import { delayShowListItem, handleBtnFakeApis } from './addValue/addValueSlice';  
-// import Skelecton from '@antd'
+import { Skeleton } from 'antd'
+
+
+
+
+
+
 
 
 function App() {
+
+
+
   const secondState = useSelector(iaAddValue)
   const dataApis = useSelector(listApi)
   const countNumber = useSelector(counterState)
@@ -16,11 +25,13 @@ function App() {
   const dispatch = useDispatch()
   const [inputValue, setInputValue] = useState('')
   const [inputValueThunk, setInputValueThunk] = useState('')
+  const [inputSearch, setInputSearch] = useState('')
 
 
-  console.log("dataAPI : " ,dataApis )
+  console.log("dataAPI : " ,dataApis)
   return (
     <div className="App">
+
       <h1>ReduxToolkit Axios</h1>
       <h2>??? hai huoc thiet su</h2>
 
@@ -30,11 +41,21 @@ function App() {
 
 
       <h2>--------------------------------------------------------------</h2>
-      <button onClick={() => dispatch(handleBtnFakeApis())}>GET APIS</button>
-      {status === 'loading' ?  <li>loading</li> : dataApis.map((item, index) => {
-        if( index > 10 ) return null
-        return <li key={index} >{item.title}</li>
-      }) }
+      <input value={inputSearch} onChange = {(e) => setInputSearch(e.target.value)} placeholder='Seaerch name film'></input>
+      <button onClick={() => dispatch(handleBtnFakeApis(inputSearch))}>GET APIS</button>
+      <div className='wrapper'>
+        {status === 'loading' ?  <Skeleton active/> : dataApis.map((item, index) => {
+         if (item.id.startsWith('t')){
+          return <div key={index} className='item'>
+            <img width='100%' height={'100%'}  src={item.i?.imageUrl} prop= {item.i?.imageUrl}></img>
+            <li className='info'>
+              <div>{item.l}</div>
+              <span>{item.y}</span>
+            </li>
+          </div>
+         }
+        }) }
+      </div>
     
 
       <h2>--------------------------------------------------------------</h2>
